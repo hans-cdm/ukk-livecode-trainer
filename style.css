@@ -10,13 +10,14 @@
   --success: #10b981;
   --success-glow: rgba(16, 185, 129, 0.3);
   --error: #ef4444;
-  --error-bg: rgba(239, 68, 68, 0.2);
+  --error-bg: rgba(239, 68, 68, 0.25);
   --warning: #f59e0b;
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --ghost-color: rgba(255, 255, 255, 0.28);
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --line-height: 28px;
 }
 
 * {
@@ -37,7 +38,7 @@ body {
 
 /* Header */
 .app-header {
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(17, 24, 39, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   padding: 12px 24px;
@@ -56,14 +57,14 @@ body {
 }
 
 .brand-icon {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 20px;
   box-shadow: 0 0 15px var(--primary-glow);
 }
 
@@ -84,7 +85,7 @@ body {
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -96,7 +97,7 @@ select {
   background: #1f2937;
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
@@ -113,7 +114,7 @@ select:focus, select:hover {
   background: #1f2937;
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
@@ -169,7 +170,7 @@ select:focus, select:hover {
 
 .progress-container {
   flex: 1;
-  max-width: 300px;
+  max-width: 280px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -194,8 +195,8 @@ select:focus, select:hover {
 .main-workspace {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 420px;
-  height: calc(100vh - 130px);
+  grid-template-columns: 1fr 400px;
+  height: calc(100vh - 128px);
   overflow: hidden;
 }
 
@@ -246,61 +247,83 @@ select:focus, select:hover {
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.auto-indent-badge {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Editor Canvas Container */
 .editor-wrapper {
   flex: 1;
   position: relative;
   display: flex;
   overflow: auto;
   cursor: text;
+  background: var(--bg-editor);
 }
 
-/* Line Numbers */
+/* Line Numbers - EXACT vertical alignment */
 .line-numbers {
-  padding: 20px 12px;
+  padding: 16px 0;
   background: #0d1117;
   border-right: 1px solid #21262d;
   color: #484f58;
   font-family: var(--font-mono);
   font-size: 14px;
-  line-height: 24px;
-  text-align: right;
   user-select: none;
-  min-width: 50px;
+  min-width: 48px;
+  text-align: right;
 }
 
-.line-numbers span.active {
+.line-number-row {
+  height: var(--line-height);
+  line-height: var(--line-height);
+  padding-right: 12px;
+  transition: color 0.15s ease;
+}
+
+.line-number-row.active {
   color: #58a6ff;
-  font-weight: bold;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.08);
 }
 
-/* Code Surface */
+/* Code Canvas & Lines */
 .code-canvas {
   flex: 1;
   position: relative;
-  padding: 20px 20px 100px 20px;
+  padding: 16px 20px 100px 16px;
   font-family: var(--font-mono);
-  font-size: 14px;
-  line-height: 24px;
-  white-space: pre;
-  tab-size: 4;
+  font-size: 15px;
   outline: none;
-  min-width: 600px;
+  min-width: 500px;
 }
 
-/* Hidden input to catch focus & keystrokes smoothly on all devices */
-.hidden-keystroke-catcher {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+/* Real Vertical Code Line */
+.code-line {
+  display: flex;
+  align-items: center;
+  height: var(--line-height);
+  line-height: var(--line-height);
+  white-space: pre;
+  position: relative;
+  border-radius: 4px;
 }
 
-/* Character rendering layers */
+.code-line.active-line {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Monospace Characters */
 .code-char {
   display: inline-block;
+  min-width: 9.02px;
+  height: var(--line-height);
+  line-height: var(--line-height);
   position: relative;
   transition: color 0.05s ease, background-color 0.05s ease;
 }
@@ -311,24 +334,21 @@ select:focus, select:hover {
 
 .code-char.char-correct {
   color: #e6edf3;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.code-char.char-keyword {
-  color: #ff7b72;
+.code-char.char-indent-auto {
+  color: rgba(255, 255, 255, 0.15);
 }
 
-.code-char.char-string {
-  color: #a5d6ff;
-}
-
-.code-char.char-comment {
-  color: #8b949e;
-  font-style: italic;
+.code-char.char-newline {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 11px;
+  margin-left: 4px;
 }
 
 .code-char.char-error {
-  color: #ff7b72;
+  color: #ff7b72 !important;
   background-color: var(--error-bg);
   border-radius: 2px;
   animation: shake 0.2s ease-in-out;
@@ -338,13 +358,13 @@ select:focus, select:hover {
 .caret {
   position: absolute;
   width: 2px;
-  height: 20px;
-  background-color: #58a6ff;
-  box-shadow: 0 0 8px #58a6ff;
+  height: 22px;
+  background-color: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
   animation: blink 1s step-start infinite;
   pointer-events: none;
   z-index: 10;
-  transition: transform 0.08s ease, top 0.08s ease, left 0.08s ease;
+  transition: transform 0.05s ease;
 }
 
 @keyframes blink {
@@ -353,8 +373,8 @@ select:focus, select:hover {
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 }
 
 /* Focus Indicator Bar at bottom of editor */
@@ -429,7 +449,7 @@ select:focus, select:hover {
 
 .tab-content {
   flex: 1;
-  padding: 20px;
+  padding: 18px;
   overflow-y: auto;
   display: none;
 }
@@ -444,7 +464,7 @@ select:focus, select:hover {
   border: 1px solid #334155;
   border-radius: 12px;
   padding: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -474,7 +494,7 @@ select:focus, select:hover {
 }
 
 .tip-body {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   line-height: 1.5;
   color: #cbd5e1;
 }
@@ -483,7 +503,7 @@ select:focus, select:hover {
   background: rgba(15, 23, 42, 0.6);
   border: 1px dashed #475569;
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px 12px;
   margin-top: 8px;
   font-style: italic;
   color: #e2e8f0;
@@ -531,7 +551,7 @@ select:focus, select:hover {
 /* Custom Code Input */
 .custom-textarea {
   width: 100%;
-  height: 250px;
+  height: 220px;
   background: #0d1117;
   border: 1px solid #30363d;
   border-radius: 8px;
@@ -591,34 +611,28 @@ select:focus, select:hover {
   background: #1e293b;
   border: 1px solid #334155;
   border-radius: 16px;
-  padding: 32px;
+  padding: 28px;
   width: 90%;
   max-width: 480px;
   text-align: center;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-  animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes popUp {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
 }
 
 .modal-icon {
-  width: 70px;
-  height: 70px;
+  width: 64px;
+  height: 64px;
   background: linear-gradient(135deg, #10b981, #059669);
   border-radius: 50%;
-  margin: 0 auto 16px;
+  margin: 0 auto 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 30px;
   box-shadow: 0 0 20px var(--success-glow);
 }
 
 .modal-title {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 700;
   margin-bottom: 8px;
   color: #f8fafc;
@@ -627,32 +641,32 @@ select:focus, select:hover {
 .modal-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin: 20px 0;
+  gap: 10px;
+  margin: 18px 0;
 }
 
 .modal-stat-box {
   background: #0f172a;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid #334155;
 }
 
 .modal-stat-num {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   font-family: var(--font-mono);
   color: #38bdf8;
 }
 
 .modal-stat-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   text-transform: uppercase;
 }
 
 .modal-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 20px;
 }
